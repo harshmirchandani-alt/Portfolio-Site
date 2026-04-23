@@ -192,24 +192,88 @@ grid-template-columns: 1fr !important;
 @media (min-width: 1024px) { .section-head { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 40px; } }
 
 /* ABOUT */
-/* FIX 6: Added align-items rules for both mobile (flex-start) and desktop (center) */
-.about-grid { display: grid; grid-template-columns: 1fr; gap: 48px; align-items: flex-start; }
+/* =====================================================
+ABOUT SECTION - NUCLEAR FIX
+===================================================== */
+.about-grid {
+display: grid;
+grid-template-columns: 1fr;
+gap: 48px;
+width: 100%;
+max-width: 100%; /* Force grid to respect the page boundary */
+}
+
 @media (min-width: 1024px) {
 .about-grid {
 grid-template-columns: 4fr 8fr;
 align-items: center;
 }
 }
+
+/* THE PADLOCK: This locks down the grid columns so they cannot stretch */
+.about-grid > div {
+min-width: 0;
+max-width: 100%;
+width: 100%;
+}
+
 .accent-line { margin-top: 24px; height: 1px; width: 64px; background: linear-gradient(90deg, var(--cyan), transparent); }
-.prose p { color: var(--text); font-size: 18px; line-height: 1.7; margin-bottom: 20px; }
+
+/* Lock down the text so it wraps properly */
+.prose {
+max-width: 100%;
+}
+.prose p {
+color: var(--text);
+font-size: 18px;
+line-height: 1.7;
+margin-bottom: 20px;
+word-wrap: break-word; /* Forces long words to break instead of stretching the screen */
+}
 .prose p:last-child { margin-bottom: 0; }
 
-.marquee-label { margin-top: 48px; font-family: 'JetBrains Mono', monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3em; color: var(--text-mute); margin-bottom: 16px; }
-.marquee { position: relative; overflow: hidden; padding: 8px 0; width: 100%; }
+.marquee-label {
+margin-top: 48px;
+font-family: 'JetBrains Mono', monospace;
+font-size: 12px;
+text-transform: uppercase;
+letter-spacing: 0.3em;
+color: var(--text-mute);
+margin-bottom: 16px;
+}
+
+/* Force the Marquee window to stay exactly inside its box */
+.marquee {
+position: relative;
+overflow: hidden;
+padding: 8px 0;
+width: 100%;
+max-width: 100%;
+display: block; /* Prevents flexbox weirdness from parents */
+}
+
 .marquee::before, .marquee::after { content: ''; position: absolute; top: 0; bottom: 0; width: 64px; z-index: 2; pointer-events: none; }
 .marquee::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
 .marquee::after { right: 0; background: linear-gradient(270deg, var(--bg), transparent); }
 
+/* The track itself is allowed to be wide, but its parent (.marquee) will cut it off */
+.marquee-track {
+display: flex;
+gap: 12px;
+width: max-content;
+animation: scroll 40s linear infinite;
+}
+
+.marquee-track span {
+padding: 8px 16px;
+border-radius: 9999px;
+border: 1px solid rgba(30, 41, 59, 0.8);
+background: rgba(15, 23, 42, 0.6);
+font-family: 'JetBrains Mono', monospace;
+font-size: 14px;
+color: var(--text);
+white-space: nowrap;
+}
 /* FIX 7: Switched width: 100% to max-content to prevent squishing items */
 .marquee-track { display: flex; gap: 12px; width: max-content; animation: scroll 40s linear infinite; }
 @keyframes scroll { to { transform: translateX(-50%); } }
